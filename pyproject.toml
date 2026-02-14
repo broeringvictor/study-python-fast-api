@@ -1,0 +1,23 @@
+[project]
+name = "fastapiv"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "alembic>=1.18.4",
+    "dotenv>=0.9.9",
+    "fastapi[standard]",
+    "pwdlib[argon2]>=0.3.0",
+    "pydantic-settings>=2.12.0",
+    "pyjwt>=2.11.0",
+    "sqlalchemy>=2.0.46",
+]
+
+[dependency-groups]
+dev = [
+    "ruff"
+    ]
+
+[tool.pytest.init_options]
+pythonpath = "."
+
