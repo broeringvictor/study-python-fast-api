@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.db_context import get_session
 from app.db.db_user import User
-from app.models.user import UserLogin, UserPublic
+from app.models.user import UserLogin, UserPublic, Token
 from app.core.config import config
 from app.core.security import COOKIE_NAME, create_access_token, get_current_user
 from app.services.user_service import authenticate_user
@@ -11,15 +11,19 @@ from app.services.user_service import authenticate_user
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/login", response_model=UserPublic)
+@router.post("/login", response_model=Token)
 async def login(
     user_in: UserLogin,
     response: Response,
     session: AsyncSession = Depends(get_session),
 ):
     user = await authenticate_user(session, user_in.email, user_in.password)
-
-    token = create_access_token(data={"sub": user.id})
+    
+    token = create_access_token(data={
+        "sub": str(user.id),
+        "email": user.email,
+        "name": user.name,
+    })
 
     response.set_cookie(
         key=COOKIE_NAME,
@@ -30,7 +34,7 @@ async def login(
         secure=not config.debug,
     )
 
-    return user
+    return {"access_token": token, "token_type": "bearer"}
 
 
 @router.post("/logout")
