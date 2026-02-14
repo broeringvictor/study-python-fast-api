@@ -19,7 +19,7 @@ class Config(BaseSettings):
     @property
     def db_url(self) -> str:
         return (
-            f"postgresql://{self.db_user}:{self.db_password}@localhost/{self.db_name}"
+            f"postgresql+psycopg://{self.db_user}:{self.db_password}@localhost/{self.db_name}"
         )
 
 

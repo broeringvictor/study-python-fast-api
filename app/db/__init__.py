@@ -7,3 +7,4 @@ table_registry = registry()
 
 
 # Ao adicionar novos models, inclua-os aqui para adicionar aos metadados
+from . import db_user as user # noqa: E402
