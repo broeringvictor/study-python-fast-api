@@ -66,6 +66,17 @@ async def update_user(session: AsyncSession, user_id: int, user_in: UserUpdate) 
     return user
 
 
+async def authenticate_user(session: AsyncSession, email: str, password: str) -> User:
+    user = await get_user_by_email(session, email)
+    if not user or not user.verify_password(password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return user
+
+
 async def delete_user(session: AsyncSession, user_id: int) -> None:
     user = await get_user_by_id(session, user_id)
 
